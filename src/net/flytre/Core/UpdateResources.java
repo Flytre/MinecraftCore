@@ -1,4 +1,4 @@
-package net.flytre;
+package net.flytre.Core;
 
 import java.io.File;
 import java.io.FileInputStream;

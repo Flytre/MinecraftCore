@@ -1,4 +1,4 @@
-package net.flytre;
+package net.flytre.Core;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

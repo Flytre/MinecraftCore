@@ -1,4 +1,4 @@
-package net.flytre;
+package net.flytre.Core;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;

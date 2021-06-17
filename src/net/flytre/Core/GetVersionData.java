@@ -1,4 +1,4 @@
-package net.flytre;
+package net.flytre.Core;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -28,7 +28,7 @@ public class GetVersionData {
         runDebug();
 
         System.out.println("Parsing Debug Output...");
-        getRegistries(new String[]{"item","block","enchantment","entity_type","mob_effect","biome","particle_type"});
+        getRegistries(new String[]{"item","block","enchantment","entity_type","mob_effect","particle_type"});
         System.out.println("Finishing...");
         deleteDebug();
     }

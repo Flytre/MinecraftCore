@@ -1,4 +1,4 @@
-package net.flytre;
+package net.flytre.Core;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

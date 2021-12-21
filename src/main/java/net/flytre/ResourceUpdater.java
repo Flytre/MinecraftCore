@@ -1,72 +1,81 @@
-package net.flytre.Core;
+package net.flytre;
+
+import net.flytre.config.ConfigInstance;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class UpdateResources {
+public class ResourceUpdater {
 
-    
-    public static void update() {
 
-        String jar = Constants.DIRECTORY + "versions/" + Constants.VERSION + "/" + Constants.VERSION + ".jar";
-        String zip = Constants.DIRECTORY + "versions/" + Constants.VERSION + "/" + Constants.VERSION + ".zip";
-        String folder = Constants.DIRECTORY + "versions/" + Constants.VERSION + "/" + Constants.VERSION;
+    public static Logger LOGGER = Logger.getLogger("Resource Updater");
 
-        System.out.println("Deleting blocking files...");
+
+    public static void update() throws IOException {
+
+        deleteDir(new File("resources"));
+        new File("resources/assets").mkdirs();
+        new File("resources/data").mkdirs();
+
+        String folder = ConfigInstance.CONFIG.getMinecraftDirectory() + "/versions/" + ConfigInstance.CONFIG.getVersion() + "/" + ConfigInstance.CONFIG.getVersion();
+        String jar = folder + ".jar";
+        String zip = folder + ".zip";
+
+        LOGGER.log(Level.INFO, "Deleting old files...");
         deleteDir(new File(zip));
         deleteDir(new File(folder));
 
-        System.out.println("Copying Jar contents to Zip file...");
-        try {
-            copyDirectory(new File(jar),new File(zip));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
 
-        System.out.println("Unzipping...");
-        unzip(zip,folder);
+        LOGGER.log(Level.INFO, "Copying Jar contents to Zip file...");
+
+        copyDirectory(new File(jar), new File(zip));
+
+        LOGGER.log(Level.INFO, "Unzipping...");
+        unzip(zip, folder);
 
 
-        System.out.println("Deleting Zip File...");
+        LOGGER.log(Level.INFO, "Deleting Zip File...");
         deleteDir(new File(zip));
 
 
-        System.out.println("Updating /resources...");
+        LOGGER.log(Level.INFO, "Updating /resources...");
 
         String assets = folder + "/assets";
         String data = folder + "/data";
 
 
-        try {
-            copyDirectory(new File(assets), new File("resources/assets"));
-            copyDirectory(new File(data), new File("resources/data"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        copyDirectory(new File(assets), new File("resources/assets"));
+        copyDirectory(new File(data), new File("resources/data"));
 
 
-        System.out.println("Deleting folder...");
+        LOGGER.log(Level.INFO, "Cleaning up...");
         deleteDir(new File(folder));
 
 
-        System.out.println("Finalizing...");
+        LOGGER.log(Level.INFO, "Finished task.");
+
 
     }
 
 
+    public static void main(String[] args) {
+    }
 
     private static void copyDirectory(File sourceDir, File targetDir) throws IOException {
+        if (!sourceDir.exists())
+            return;
         if (sourceDir.isDirectory()) {
             copyDirectoryRecursively(sourceDir, targetDir);
         } else {
-            Files.copy(sourceDir.toPath(), targetDir.toPath());
+            Files.copy(sourceDir.toPath(), targetDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -82,7 +91,7 @@ public class UpdateResources {
     private static void unzip(String zipFilePath, String destDir) {
         File dir = new File(destDir);
         // create output directory if it doesn't exist
-        if(!dir.exists()) dir.mkdirs();
+        if (!dir.exists()) dir.mkdirs();
         FileInputStream fis;
         //buffer for read and write data to file
         byte[] buffer = new byte[1024];
@@ -90,10 +99,10 @@ public class UpdateResources {
             fis = new FileInputStream(zipFilePath);
             ZipInputStream zis = new ZipInputStream(fis);
             ZipEntry ze = zis.getNextEntry();
-            while(ze != null){
+            while (ze != null) {
                 String fileName = ze.getName();
                 File newFile = new File(destDir + File.separator + fileName);
-                if(newFile.getAbsolutePath().contains(".class")) {
+                if (newFile.getAbsolutePath().contains(".class")) {
                     zis.closeEntry();
                     ze = zis.getNextEntry();
                     continue;
@@ -120,7 +129,12 @@ public class UpdateResources {
 
     }
 
+
     public static void deleteDir(File file) {
+
+        if (!file.exists())
+            return;
+
         File[] contents = file.listFiles();
         if (contents != null) {
             for (File f : contents) {
@@ -129,5 +143,4 @@ public class UpdateResources {
         }
         file.delete();
     }
-
 }

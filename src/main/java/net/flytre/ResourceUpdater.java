@@ -65,10 +65,6 @@ public class ResourceUpdater {
 
     }
 
-
-    public static void main(String[] args) {
-    }
-
     private static void copyDirectory(File sourceDir, File targetDir) throws IOException {
         if (!sourceDir.exists())
             return;

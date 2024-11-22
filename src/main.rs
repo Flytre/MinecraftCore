@@ -79,7 +79,7 @@ fn find_server_data(config: &Config) -> Result<(), Box<dyn std::error::Error>> {
         get_registries(&[
             "item",
             "block",
-            "enchantment",
+//            "enchantment",
             "entity_type",
             "mob_effect",
             "particle_type",

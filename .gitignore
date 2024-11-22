@@ -1,0 +1,28 @@
+# Rust
+/target/
+/**/*.rs.bk
+**/*.rs.swp
+
+# Dependencies
+Cargo.lock
+Cargo.toml.orig
+
+# Build artifacts
+*.rlib
+*.d
+
+# Coverage and debugging
+*.profraw
+*.profdata
+
+# Emacs
+*~
+\#*\#
+.\#*
+auto-save-list/
+tramp
+flycheck_*
+projectile-bookmarks.eld
+
+# This
+/resources/
